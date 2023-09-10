@@ -101,7 +101,10 @@ const logout = asyncHandler(async(req,res)=>{
             httpOnly:true,
             secure:true,
         });
-        return res.sendStatus(204);//forbidden
+        return res.status(204).json({ 
+            success: true, 
+            message: "Đăng xuất thành công" 
+        });
     }
     await User.findOneAndUpdate({refreshToken},{
         refreshToken:"",
@@ -110,7 +113,10 @@ const logout = asyncHandler(async(req,res)=>{
         httpOnly:true,
         secure:true,
     });
-    res.sendStatus(204); //forbidden
+    return res.status(204).json({ 
+        success: true, 
+        message: "Đăng xuất thành công" 
+    });
 });
 
 module.exports = {createUser, loginUserCtrl, handleRefreshToken,logout};
