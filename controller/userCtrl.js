@@ -101,8 +101,7 @@ const logout = asyncHandler(async(req,res)=>{
             httpOnly:true,
             secure:true,
         });
-        return res.status(204);
-        res.json({ 
+        return res.json({ 
             success: true, 
             message: "Đăng xuất thành công" 
         });
@@ -114,8 +113,7 @@ const logout = asyncHandler(async(req,res)=>{
         httpOnly:true,
         secure:true,
     });
-    return res.status(204);
-    res.json({ 
+    return res.json({ 
             success: true, 
             message: "Đăng xuất thành công" 
         });
