@@ -101,7 +101,8 @@ const logout = asyncHandler(async(req,res)=>{
             httpOnly:true,
             secure:true,
         });
-        return res.status(204).json({ 
+        return res.status(204);
+        res.json({ 
             success: true, 
             message: "Đăng xuất thành công" 
         });
@@ -113,10 +114,11 @@ const logout = asyncHandler(async(req,res)=>{
         httpOnly:true,
         secure:true,
     });
-    return res.status(204).json({ 
-        success: true, 
-        message: "Đăng xuất thành công" 
-    });
+    return res.status(204);
+    res.json({ 
+            success: true, 
+            message: "Đăng xuất thành công" 
+        });
 });
 
 module.exports = {createUser, loginUserCtrl, handleRefreshToken,logout};
