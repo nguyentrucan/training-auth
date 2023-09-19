@@ -89,41 +89,49 @@ const handleRefreshToken = asyncHandler(async(req,res) => {
 });
 
 //Logout functionality
-const logout = asyncHandler(async(req,res)=>{
+const logout = asyncHandler(async (req, res) => {
+  try {
     const cookie = req.cookies;
+    
     if (!cookie?.refreshToken) {
-        res.clearCookie("refreshToken", {
-            httpOnly:true,
-            secure:true,
-        });
-        return res.json({ 
-            success: false, 
-            message: "Đăng xuất không thành công" 
-        });
+      return res.status(400).json({ 
+        success: false, 
+        message: "Không có refreshToken trong cookie" 
+      });
     }
+    
     const refreshToken = cookie.refreshToken;
-    const user = await User.findOne({refreshToken});
+    const user = await User.findOne({ refreshToken });
+    
     if (!user) {
-        res.clearCookie("refreshToken", {
-            httpOnly:true,
-            secure:true,
-        });
-        return res.json({ 
-            success: true, 
-            message: "Đăng xuất thành công" 
-        });
+      return res.status(400).json({ 
+        success: false, 
+        message: "Không tìm thấy người dùng với refreshToken này" 
+      });
     }
-    await User.findOneAndUpdate({refreshToken},{
-        refreshToken:"",
+    
+    // Xóa refreshToken trong cơ sở dữ liệu
+    await User.findOneAndUpdate({ refreshToken }, {
+      refreshToken: "",
     });
-    res.clearCookie("refreshToken",{
-        httpOnly:true,
-        secure:true,
+    
+    // Xóa refreshToken trong cookie
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: true,
     });
-    return res.json({ 
-            success: true, 
-            message: "Đăng xuất thành công" 
-        });
+    
+    return res.status(200).json({ 
+      success: true, 
+      message: "Đăng xuất thành công" 
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ 
+      success: false, 
+      message: "Lỗi trong quá trình đăng xuất" 
+    });
+  }
 });
 
 module.exports = {createUser, loginUserCtrl, handleRefreshToken,logout};
