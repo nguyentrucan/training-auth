@@ -92,7 +92,14 @@ const handleRefreshToken = asyncHandler(async(req,res) => {
 const logout = asyncHandler(async(req,res)=>{
     const cookie = req.cookies;
     if (!cookie?.refreshToken) {
-        throw new Error("Không có Refresh Token trong cookie");
+        res.clearCookie("refreshToken", {
+            httpOnly:true,
+            secure:true,
+        });
+        return res.json({ 
+            success: false, 
+            message: "Đăng xuất không thành công" 
+        });
     }
     const refreshToken = cookie.refreshToken;
     const user = await User.findOne({refreshToken});
